@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nişan | Kutlamamız</title>
+    <!-- Fontlar -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Stil -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="nav-link active">Nişan</a>
+            <a href="wedding.html" class="nav-link">Düğün</a>
+        </div>
+    </nav>
+
+    <!-- Yan Dekoratif Resimler -->
+    <img src="assets/sero.png" alt="" class="side-image left">
+    <img src="assets/elo.png" alt="" class="side-image right">
+
+    <main>
+        <!-- Hero Bölümü -->
+        <section class="hero">
+            <div class="container">
+                <p>Davetlisiniz</p>
+                <h1>Elif & Sercan</h1>
+                <p>Nişan Töreni</p>
+            </div>
+        </section>
+
+        <!-- Etkinlik Detayları -->
+        <section class="event-details">
+            <div class="container">
+                <div class="details-grid">
+                    <div class="detail-item">
+                        <h3>Tarih</h3>
+                        <p>30 Mayıs 2026, Cumartesi</p>
+                    </div>
+                    <div class="detail-item">
+                        <h3>Saat</h3>
+                        <p>19:00 - 23:00</p>
+                    </div>
+                    <div class="detail-item">
+                        <h3>Mekan</h3>
+                        <p>LENA DAVET</p>
+                    </div>
+                    <div class="detail-item">
+                        <h3>Adres</h3>
+                        <p>Panayır Mah. İstanbul Cad. No:500, 16120 Osmangazi/Bursa</p>
+                    </div>
+                </div>
+
+                <!-- Google Haritalar -->
+                <div class="map-container">
+                    <iframe 
+                        src="https://maps.google.com/maps?q=Panay%C4%B1r%20Mah.%20%C4%B0stanbul%20Cad.%20No:500%2016120%20Osmangazi/Bursa&t=&z=15&ie=UTF8&iwloc=&output=embed" 
+                        allowfullscreen="" 
+                        loading="lazy">
+                    </iframe>
+                </div>
+            </div>
+        </section>
+
+        <!-- Yükleme & Galeri Bölümü -->
+        <section class="photo-gallery">
+            <div class="container">
+                <h2 style="text-align: center; margin-bottom: var(--spacing-lg);">Anılarınızı Paylaşın</h2>
+                
+                <div class="upload-section" id="drop-zone">
+                    <div class="drag-area">
+                        <h2>Fotoğrafları Sürükleyip Bırakın</h2>
+                        <p>veya dosya seçmek için aşağıdaki butona tıklayın</p>
+                        <label for="file-input" class="upload-btn">Fotoğraf Seç</label>
+                        <input type="file" id="file-input" multiple accept="image/*">
+                    </div>
+                </div>
+
+                <div class="gallery-grid" id="gallery-grid">
+                    <!-- Fotoğraflar JS tarafından buraya eklenecek -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer style="text-align: center; padding: var(--spacing-md); color: var(--color-gray); font-size: 0.8rem;">
+        <p>&copy; 2026 Elif & Sercan. Sevgiyle yapıldı.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
