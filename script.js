@@ -1,98 +1,51 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {
-    getStorage,
-    ref,
-    uploadBytes,
-    getDownloadURL
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+document.addEventListener("DOMContentLoaded", () => {
 
-document.addEventListener('DOMContentLoaded', () => {
+    const fileInput = document.getElementById("file-input");
+    const dropZone = document.getElementById("drop-zone");
+    const galleryGrid = document.getElementById("gallery-grid");
 
-    const fileInput = document.getElementById('file-input');
-    const dropZone = document.getElementById('drop-zone');
-    const galleryGrid = document.getElementById('gallery-grid');
+    // 1. UPLOAD FONKSİYONU
+    async function uploadToVercel(file) {
+        const res = await fetch("/api/upload", {
+            method: "POST",
+            body: file
+        });
 
+        const data = await res.json();
+        return data.url;
+    }
 
-    // Init Firebase
-    const app = initializeApp(firebaseConfig);
-    const storage = getStorage(app);
+    // 2. HANDLE FILES (BURASI)
+    async function handleFiles(files) {
 
-    // File input
-    fileInput.addEventListener('change', (e) => {
+        for (const file of files) {
+
+            if (!file.type.startsWith("image/")) continue;
+
+            const url = await uploadToVercel(file);
+
+            console.log("Uploaded:", url);
+
+            const img = document.createElement("img");
+            img.src = url;
+            img.className = "gallery-item";
+
+            galleryGrid.appendChild(img);
+        }
+    }
+
+    // 3. EVENTLER
+    fileInput.addEventListener("change", (e) => {
         handleFiles(e.target.files);
     });
 
-    // Drag over
-    dropZone.addEventListener('dragover', (e) => {
+    dropZone.addEventListener("dragover", (e) => {
         e.preventDefault();
-        dropZone.style.borderColor = 'var(--color-gold-hover)';
-        dropZone.style.backgroundColor = 'rgba(197, 160, 89, 0.05)';
     });
 
-    // Drag leave
-    dropZone.addEventListener('dragleave', () => {
-        dropZone.style.borderColor = 'var(--color-gold)';
-        dropZone.style.backgroundColor = '#fff';
-    });
-
-    // Drop
-    dropZone.addEventListener('drop', (e) => {
+    dropZone.addEventListener("drop", (e) => {
         e.preventDefault();
-        dropZone.style.borderColor = 'var(--color-gold)';
-        dropZone.style.backgroundColor = '#fff';
-
         handleFiles(e.dataTransfer.files);
     });
-
-    // MAIN FUNCTION
-    async function handleFiles(files) {
-
-        Array.from(files).forEach(async (file) => {
-
-            if (!file.type.startsWith('image/')) return;
-
-            try {
-
-                // Firebase storage path
-                const storageRef = ref(
-                    storage,
-                    `uploads/${Date.now()}-${file.name}`
-                );
-
-                // Upload file
-                await uploadBytes(storageRef, file);
-
-                // Get URL
-                const downloadURL = await getDownloadURL(storageRef);
-
-                console.log("Uploaded:", downloadURL);
-
-                // Preview
-                const reader = new FileReader();
-
-                reader.onload = (e) => {
-
-                    const imgContainer = document.createElement('div');
-                    imgContainer.className = 'gallery-item';
-
-                    const img = document.createElement('img');
-                    img.src = e.target.result;
-                    img.alt = 'Yüklenen fotoğraf';
-
-                    // Firebase URL (istersen kullanırsın sonra)
-                    img.setAttribute("data-url", downloadURL);
-
-                    imgContainer.appendChild(img);
-                    galleryGrid.appendChild(imgContainer);
-                };
-
-                reader.readAsDataURL(file);
-
-            } catch (error) {
-                console.error("Upload error:", error);
-                alert("Fotoğraf yüklenemedi!");
-            }
-        });
-    }
 
 });
