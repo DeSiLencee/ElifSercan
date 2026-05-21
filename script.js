@@ -1,10 +1,24 @@
-import { upload } from "@vercel/blob/client";
-
 document.addEventListener("DOMContentLoaded", () => {
 
     const fileInput = document.getElementById("file-input");
     const dropZone = document.getElementById("drop-zone");
     const galleryGrid = document.getElementById("gallery-grid");
+
+    async function uploadFile(file) {
+
+        const res = await fetch("/api/upload", {
+            method: "POST",
+            body: file
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            throw new Error(data.error || "Upload failed");
+        }
+
+        return data.url;
+    }
 
     async function handleFiles(files) {
 
@@ -14,20 +28,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
             try {
 
-                const blob = await upload(file.name, file, {
-                    access: "public",
-                    handleUploadUrl: "/api/upload",
-                });
+                const url = await uploadFile(file);
 
-                console.log("Uploaded:", blob.url);
+                console.log("Uploaded:", url);
 
                 const img = document.createElement("img");
-                img.src = blob.url;
+                img.src = url;
+                img.className = "gallery-item";
 
                 galleryGrid.appendChild(img);
 
             } catch (err) {
-                console.error(err);
+                console.error("Upload error:", err);
             }
         }
     }
