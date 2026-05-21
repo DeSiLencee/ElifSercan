@@ -4,8 +4,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const dropZone = document.getElementById("drop-zone");
     const galleryGrid = document.getElementById("gallery-grid");
 
-    // 1. UPLOAD FONKSİYONU
+    // Upload to Vercel Blob
     async function uploadToVercel(file) {
+
         const res = await fetch("/api/upload", {
             method: "POST",
             body: file
@@ -15,30 +16,36 @@ document.addEventListener("DOMContentLoaded", () => {
         return data.url;
     }
 
-    // 2. HANDLE FILES (BURASI)
+    // Handle files
     async function handleFiles(files) {
 
         for (const file of files) {
 
             if (!file.type.startsWith("image/")) continue;
 
-            const url = await uploadToVercel(file);
+            try {
+                const url = await uploadToVercel(file);
 
-            console.log("Uploaded:", url);
+                console.log("Uploaded:", url);
 
-            const img = document.createElement("img");
-            img.src = url;
-            img.className = "gallery-item";
+                const img = document.createElement("img");
+                img.src = url;
+                img.className = "gallery-item";
 
-            galleryGrid.appendChild(img);
+                galleryGrid.appendChild(img);
+
+            } catch (err) {
+                console.error("Upload error:", err);
+            }
         }
     }
 
-    // 3. EVENTLER
+    // File input
     fileInput.addEventListener("change", (e) => {
         handleFiles(e.target.files);
     });
 
+    // Drag & drop
     dropZone.addEventListener("dragover", (e) => {
         e.preventDefault();
     });
