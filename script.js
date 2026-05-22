@@ -4,22 +4,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const dropZone = document.getElementById("drop-zone");
     const galleryGrid = document.getElementById("gallery-grid");
 
-    async function uploadFile(file) {
-
-        const res = await fetch("/api/upload", {
-            method: "POST",
-            body: file
-        });
-
-        const data = await res.json();
-
-        if (!res.ok) {
-            throw new Error(data.error || "Upload failed");
-        }
-
-        return data.url;
-    }
-
     async function handleFiles(files) {
 
         for (const file of files) {
@@ -28,12 +12,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
             try {
 
-                const url = await uploadFile(file);
+                const formData = new FormData();
+                formData.append("file", file);
 
-                console.log("Uploaded:", url);
+                const res = await fetch("/api/upload", {
+                    method: "POST",
+                    body: file
+                });
+
+                const data = await res.json();
+
+                console.log("Uploaded:", data.url);
 
                 const img = document.createElement("img");
-                img.src = url;
+                img.src = data.url;
                 img.className = "gallery-item";
 
                 galleryGrid.appendChild(img);
