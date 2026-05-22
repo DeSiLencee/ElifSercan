@@ -7,24 +7,27 @@ document.addEventListener("DOMContentLoaded", () => {
     const fileInput = document.getElementById("file-input");
     const dropZone = document.getElementById("drop-zone");
     const galleryGrid = document.getElementById("gallery-grid");
+    const successToast = document.getElementById("success-toast");
 
-    // Galeri listeleme (loadPhotos) fonksiyonunu kaldırdık çünkü fotoğrafların sitede görünmesini istemiyoruz.
+    function showSuccessToast() {
+        successToast.classList.add('show');
+        setTimeout(() => {
+            successToast.classList.remove('show');
+        }, 4000);
+    }
 
     async function handleFiles(files) {
         for (const file of files) {
             if (!file.type.startsWith("image/")) continue;
 
-            // Yükleniyor durumu bildirimi
-            const statusItem = document.createElement('div');
-            statusItem.className = 'gallery-item';
-            statusItem.style.display = 'flex';
-            statusItem.style.alignItems = 'center';
-            statusItem.style.justifyContent = 'center';
-            statusItem.style.textAlign = 'center';
-            statusItem.style.padding = '10px';
-            statusItem.style.fontSize = '0.9rem';
-            statusItem.innerText = 'Fotoğrafınız yükleniyor...';
-            galleryGrid.prepend(statusItem);
+            // Yükleniyor durumu bildirimi (küçük bir yazı olarak kalsın)
+            const loadingText = document.createElement('p');
+            loadingText.innerText = 'Fotoğrafınız gönderiliyor...';
+            loadingText.style.textAlign = 'center';
+            loadingText.style.color = 'var(--color-gold)';
+            loadingText.style.fontSize = '0.9rem';
+            loadingText.style.marginTop = '1rem';
+            galleryGrid.prepend(loadingText);
 
             try {
                 // 1. Dosyayı Supabase Storage 'photos' bucket'ına yükle
@@ -50,22 +53,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 if (dbError) throw dbError;
 
-                // Başarılı yükleme bildirimi
-                statusItem.innerText = 'Fotoğrafınız başarıyla gönderildi. Teşekkür ederiz!';
-                statusItem.style.color = 'var(--color-gold)';
-                
-                // 5 saniye sonra bildirimi kaldır
-                setTimeout(() => {
-                    statusItem.style.opacity = '0';
-                    statusItem.style.transition = 'opacity 1s ease';
-                    setTimeout(() => statusItem.remove(), 1000);
-                }, 5000);
+                // Başarılı yükleme bildirimi (Ekranda kalpli toast çıkar)
+                loadingText.remove();
+                showSuccessToast();
 
             } catch (err) {
                 console.error("Yükleme hatası:", err.message);
-                statusItem.innerText = 'Yükleme sırasında bir hata oluştu.';
-                statusItem.style.color = 'red';
-                setTimeout(() => statusItem.remove(), 3000);
+                loadingText.innerText = 'Yükleme sırasında bir hata oluştu.';
+                loadingText.style.color = 'red';
+                setTimeout(() => loadingText.remove(), 3000);
             }
         }
     }
