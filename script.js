@@ -6,8 +6,9 @@ const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 document.addEventListener("DOMContentLoaded", () => {
     const fileInput = document.getElementById("file-input");
     const dropZone = document.getElementById("drop-zone");
-    const galleryGrid = document.getElementById("gallery-grid");
+    const uploadToast = document.getElementById("upload-toast");
     const successToast = document.getElementById("success-toast");
+    const progressFill = document.getElementById("progress-fill");
 
     function showSuccessToast() {
         successToast.classList.add('show');
@@ -20,14 +21,18 @@ document.addEventListener("DOMContentLoaded", () => {
         for (const file of files) {
             if (!file.type.startsWith("image/")) continue;
 
-            // Yükleniyor durumu bildirimi (küçük bir yazı olarak kalsın)
-            const loadingText = document.createElement('p');
-            loadingText.innerText = 'Fotoğrafınız gönderiliyor...';
-            loadingText.style.textAlign = 'center';
-            loadingText.style.color = 'var(--color-gold)';
-            loadingText.style.fontSize = '0.9rem';
-            loadingText.style.marginTop = '1rem';
-            galleryGrid.prepend(loadingText);
+            // Yükleme barını göster ve sıfırla
+            progressFill.style.width = "0%";
+            uploadToast.classList.add('show');
+
+            // İlerlemeyi simüle et (Gerçekçi bir deneyim için)
+            let progress = 0;
+            const progressInterval = setInterval(() => {
+                if (progress < 90) {
+                    progress += Math.random() * 5;
+                    progressFill.style.width = `${Math.min(progress, 90)}%`;
+                }
+            }, 200);
 
             try {
                 // 1. Dosyayı Supabase Storage 'photos' bucket'ına yükle
@@ -53,15 +58,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 if (dbError) throw dbError;
 
-                // Başarılı yükleme bildirimi (Ekranda kalpli toast çıkar)
-                loadingText.remove();
-                showSuccessToast();
+                // İşlem başarılı: Barı %100 yap ve kapat
+                clearInterval(progressInterval);
+                progressFill.style.width = "100%";
+                
+                setTimeout(() => {
+                    uploadToast.classList.remove('show');
+                    setTimeout(showSuccessToast, 500); // Başarı mesajını göster
+                }, 500);
 
             } catch (err) {
+                clearInterval(progressInterval);
                 console.error("Yükleme hatası:", err.message);
-                loadingText.innerText = 'Yükleme sırasında bir hata oluştu.';
-                loadingText.style.color = 'red';
-                setTimeout(() => loadingText.remove(), 3000);
+                uploadToast.classList.remove('show');
+                alert("Yükleme sırasında bir hata oluştu: " + err.message);
             }
         }
     }

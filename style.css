@@ -306,7 +306,7 @@ img {
 }
 
 /* Success Toast Notification */
-.success-toast {
+.success-toast, .upload-toast {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -321,12 +321,46 @@ img {
     opacity: 0;
     pointer-events: none;
     transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    min-width: 280px;
 }
 
-.success-toast.show {
+.success-toast.show, .upload-toast.show {
     opacity: 1;
     transform: translate(-50%, -50%) scale(1);
     pointer-events: auto;
+}
+
+/* Progress Bar Styles */
+.progress-container {
+    width: 100%;
+    height: 8px;
+    background: #f0f0f0;
+    border-radius: 10px;
+    margin: 20px 0;
+    position: relative;
+    overflow: visible;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--color-gold);
+    border-radius: 10px;
+    transition: width 0.3s ease;
+    position: relative;
+}
+
+.progress-heart {
+    position: absolute;
+    right: -10px;
+    top: -10px;
+    font-size: 1.2rem;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+
+.upload-toast h4 {
+    font-size: 1rem;
+    color: var(--color-gold);
 }
 
 .success-toast .heart-icon {
@@ -334,17 +368,6 @@ img {
     color: #e25555;
     margin-bottom: var(--spacing-sm);
     animation: heartBeat 1.5s infinite;
-}
-
-.success-toast h4 {
-    color: var(--color-gold);
-    margin-bottom: var(--spacing-xs);
-    font-size: 1.2rem;
-}
-
-.success-toast p {
-    color: var(--color-gray);
-    font-size: 0.9rem;
 }
 
 @keyframes heartBeat {
