@@ -8,38 +8,23 @@ document.addEventListener("DOMContentLoaded", () => {
     const dropZone = document.getElementById("drop-zone");
     const galleryGrid = document.getElementById("gallery-grid");
 
-    // Sayfa açıldığında mevcut fotoğrafları Supabase'den yükle
-    loadPhotos();
-
-    async function loadPhotos() {
-        try {
-            // 'photos' tablosundan tüm kayıtları çek
-            const { data, error } = await _supabase
-                .from('photos')
-                .select('*')
-                .order('created_at', { ascending: false });
-
-            if (error) throw error;
-
-            galleryGrid.innerHTML = '';
-            data.forEach(photo => {
-                addPhotoToGallery(photo.url);
-            });
-        } catch (error) {
-            console.error('Fotoğraflar yüklenemedi:', error.message);
-        }
-    }
+    // Galeri listeleme (loadPhotos) fonksiyonunu kaldırdık çünkü fotoğrafların sitede görünmesini istemiyoruz.
 
     async function handleFiles(files) {
         for (const file of files) {
             if (!file.type.startsWith("image/")) continue;
 
-            // Yükleniyor durumu
-            const tempItem = document.createElement('div');
-            tempItem.className = 'gallery-item';
-            tempItem.style.opacity = '0.5';
-            tempItem.innerText = 'Yükleniyor...';
-            galleryGrid.prepend(tempItem);
+            // Yükleniyor durumu bildirimi
+            const statusItem = document.createElement('div');
+            statusItem.className = 'gallery-item';
+            statusItem.style.display = 'flex';
+            statusItem.style.alignItems = 'center';
+            statusItem.style.justifyContent = 'center';
+            statusItem.style.textAlign = 'center';
+            statusItem.style.padding = '10px';
+            statusItem.style.fontSize = '0.9rem';
+            statusItem.innerText = 'Fotoğrafınız yükleniyor...';
+            galleryGrid.prepend(statusItem);
 
             try {
                 // 1. Dosyayı Supabase Storage 'photos' bucket'ına yükle
@@ -65,30 +50,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 if (dbError) throw dbError;
 
-                // Başarılı
-                tempItem.remove();
-                addPhotoToGallery(publicUrl);
+                // Başarılı yükleme bildirimi
+                statusItem.innerText = 'Fotoğrafınız başarıyla gönderildi. Teşekkür ederiz!';
+                statusItem.style.color = 'var(--color-gold)';
+                
+                // 5 saniye sonra bildirimi kaldır
+                setTimeout(() => {
+                    statusItem.style.opacity = '0';
+                    statusItem.style.transition = 'opacity 1s ease';
+                    setTimeout(() => statusItem.remove(), 1000);
+                }, 5000);
 
             } catch (err) {
                 console.error("Yükleme hatası:", err.message);
-                tempItem.innerText = 'Hata!';
-                tempItem.style.color = 'red';
-                setTimeout(() => tempItem.remove(), 2000);
+                statusItem.innerText = 'Yükleme sırasında bir hata oluştu.';
+                statusItem.style.color = 'red';
+                setTimeout(() => statusItem.remove(), 3000);
             }
         }
-    }
-
-    function addPhotoToGallery(url) {
-        const imgContainer = document.createElement('div');
-        imgContainer.className = 'gallery-item';
-        
-        const img = document.createElement('img');
-        img.src = url;
-        img.alt = 'Yüklenen fotoğraf';
-        img.loading = 'lazy';
-        
-        imgContainer.appendChild(img);
-        galleryGrid.prepend(imgContainer);
     }
 
     fileInput.addEventListener("change", (e) => {
