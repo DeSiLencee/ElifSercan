@@ -23,7 +23,7 @@
 }
 
 body {
-    background-color: var(--color-cream);
+    background-color: #f7f2e9;
     color: var(--color-black);
     font-family: var(--font-sans);
     line-height: 1.6;
@@ -60,7 +60,7 @@ section {
 
 /* Navigation */
 .navbar {
-    background-color: var(--color-cream);
+    background-color: #f7f2e9;
     padding: var(--spacing-sm) 0;
     position: sticky;
     top: 0;
@@ -94,7 +94,7 @@ section {
     justify-content: center;
     align-items: center;
     text-align: center;
-    background-color: #f0ede8; /* Placeholder background color */
+    background-color: transparent;
     background-size: cover;
     background-position: center;
     padding: var(--spacing-md);
@@ -225,16 +225,205 @@ section {
 
 /* Wedding Page Specific */
 .wedding-coming-soon {
-    min-height: 60vh;
+    min-height: calc(100vh - 112px);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.wedding-coming-soon h1 {
+    font-size: clamp(3rem, 10vw, 6rem);
+    margin-bottom: var(--spacing-sm);
+    animation: wedding-title-in 1.2s ease-out both;
+}
+
+.wedding-coming-soon h1 span {
+    color: var(--color-gold);
+    font-style: italic;
+}
+
+.eyebrow {
+    color: var(--color-gold);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: var(--spacing-sm);
+}
+
+.coming-soon-text {
+    max-width: 620px;
+    margin: 0 auto;
+    color: var(--color-gray);
+    font-family: var(--font-serif);
+    font-size: 1.2rem;
+}
+
+.wedding-intro { position: relative; z-index: 2; }
+.wedding-eyebrow { animation: wedding-fade-up 0.9s 0.15s ease-out both; }
+
+.wedding-announcement {
+    margin-bottom: var(--spacing-md);
+    color: var(--color-gold-hover);
+    font-family: var(--font-serif);
+    font-size: clamp(1.35rem, 3vw, 2rem);
+    font-style: italic;
+    animation: wedding-fade-up 0.9s 0.35s ease-out both;
+}
+
+.gold-divider {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    max-width: 330px;
+    margin: 0 auto var(--spacing-md);
+    color: var(--color-gold);
+}
+
+.gold-divider::before, .gold-divider::after {
+    content: "";
+    width: 50%;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--color-gold));
+    animation: divider-grow 1.2s 0.5s ease-out both;
+}
+
+.gold-divider::after { background: linear-gradient(to left, transparent, var(--color-gold)); }
+.gold-divider span { animation: heart-beat 2s ease-in-out infinite; }
+
+.rings { position: relative; width: 70px; height: 42px; margin: 0 auto var(--spacing-sm); }
+.rings span {
+    position: absolute;
+    top: 4px;
+    width: 34px;
+    height: 34px;
+    border: 3px solid var(--color-gold);
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.8);
+}
+.rings span:first-child { left: 8px; transform: rotate(-12deg); }
+.rings span:last-child { right: 8px; transform: rotate(12deg); }
+
+.wedding-sparkles {
+    position: absolute;
+    top: 8%;
+    bottom: 8%;
+    width: min(18vw, 190px);
+    color: rgba(197, 160, 89, 0.55);
+    pointer-events: none;
+}
+.wedding-sparkles-left { left: 4%; }
+.wedding-sparkles-right { right: 4%; }
+.wedding-sparkles span {
+    position: absolute;
+    font-size: clamp(1.1rem, 3vw, 2rem);
+    animation: sparkle-float 5s ease-in-out infinite;
+}
+.wedding-sparkles span:nth-child(1) { top: 8%; left: 15%; }
+.wedding-sparkles span:nth-child(2) { top: 36%; right: 8%; animation-delay: -1.4s; }
+.wedding-sparkles span:nth-child(3) { top: 64%; left: 5%; animation-delay: -2.7s; }
+.wedding-sparkles span:nth-child(4) { bottom: 4%; right: 22%; animation-delay: -3.8s; }
+.wedding-sparkles-right span:nth-child(1) { left: auto; right: 15%; }
+.wedding-sparkles-right span:nth-child(2) { right: auto; left: 8%; }
+.wedding-sparkles-right span:nth-child(3) { left: auto; right: 5%; }
+.wedding-sparkles-right span:nth-child(4) { right: auto; left: 22%; }
+
+@keyframes wedding-title-in {
+    from { opacity: 0; transform: translateY(18px) scale(0.96); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes wedding-fade-up {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes divider-grow {
+    from { width: 0; opacity: 0; }
+    to { width: 50%; opacity: 1; }
+}
+@keyframes heart-beat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
+@keyframes sparkle-float {
+    0%, 100% { transform: translate(0, 0) rotate(0); opacity: 0.35; }
+    50% { transform: translate(12px, -18px) rotate(12deg); opacity: 0.9; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .wedding-coming-soon *, .wedding-coming-soon *::before, .wedding-coming-soon *::after {
+        animation: none !important;
+    }
+}
+
+.engagement-hero {
+    height: 65vh;
+}
+
+.section-heading {
+    max-width: 680px;
+    margin: 0 auto var(--spacing-lg);
+    text-align: center;
+}
+
+.section-heading h2 {
+    margin-bottom: var(--spacing-sm);
+    font-size: clamp(2rem, 5vw, 3rem);
+}
+
+.section-heading > p:last-child {
+    color: var(--color-gray);
+}
+
+.memories-grid:not(:empty) {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--spacing-md);
+    max-width: 960px;
+    margin: 0 auto;
+}
+
+.memory-card {
+    overflow: hidden;
+    border: 8px solid rgba(255, 255, 255, 0.85);
+    border-radius: 3px;
+    background: #fff;
+    box-shadow: 0 18px 45px rgba(74, 55, 31, 0.14);
+}
+
+.memory-card:nth-child(2) {
+    transform: translateY(var(--spacing-md));
+}
+
+.memory-card img {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+}
+
+.memory-card:hover img {
+    transform: scale(1.025);
+}
+
+.gallery-title,
+.site-footer {
+    text-align: center;
+}
+
+.gallery-title {
+    margin-bottom: var(--spacing-lg);
+}
+
+.site-footer {
+    padding: var(--spacing-md);
+    color: var(--color-gray);
+    font-size: 0.8rem;
 }
 
 .wedding-coming-soon h2 {
-    font-size: 2.5rem;
+    max-width: 760px;
+    margin-right: auto;
+    margin-left: auto;
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
     margin-bottom: var(--spacing-md);
 }
 
@@ -302,6 +491,15 @@ img {
 
     .gallery-grid {
         grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+
+    .memories-grid:not(:empty) {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-sm);
+    }
+
+    .memory-card:nth-child(2) {
+        transform: none;
     }
 }
 
